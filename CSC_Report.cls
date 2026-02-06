@@ -28,16 +28,16 @@ Private mPaperSizeLengthInPixels As Integer
 Private mPaperSizeWidthInPixels As Integer
 
 Private mCParameters As Collection
-Private mRecordset As ADODB.Recordset
+Private mRecordset As ADODB.recordset
 
 Private mCRAXDRTReport As CRAXDRT.Report
 
-Public Property Get FileName() As String
-    FileName = mFileName
+Public Property Get FILENAME() As String
+    FILENAME = mFileName
 End Property
 
-Public Property Let FileName(ByVal Value As String)
-    mFileName = Value
+Public Property Let FILENAME(ByVal value As String)
+    mFileName = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -47,8 +47,8 @@ Public Property Get WindowTitle() As String
     WindowTitle = mWindowTitle
 End Property
 
-Public Property Let WindowTitle(ByVal Value As String)
-    mWindowTitle = Value
+Public Property Let WindowTitle(ByVal value As String)
+    mWindowTitle = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -58,8 +58,8 @@ Public Property Get ParentForm_hWnd() As Long
     ParentForm_hWnd = mParentForm_hWnd
 End Property
 
-Public Property Let ParentForm_hWnd(ByVal Value As Long)
-    mParentForm_hWnd = Value
+Public Property Let ParentForm_hWnd(ByVal value As Long)
+    mParentForm_hWnd = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -69,8 +69,8 @@ Public Property Get PaperSizeLengthInPixels() As Integer
     PaperSizeLengthInPixels = mPaperSizeLengthInPixels
 End Property
 
-Public Property Let PaperSizeLengthInPixels(ByVal Value As Integer)
-    mPaperSizeLengthInPixels = Value
+Public Property Let PaperSizeLengthInPixels(ByVal value As Integer)
+    mPaperSizeLengthInPixels = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -80,8 +80,8 @@ Public Property Get PaperSizeWidthInPixels() As Integer
     PaperSizeWidthInPixels = mPaperSizeWidthInPixels
 End Property
 
-Public Property Let PaperSizeWidthInPixels(ByVal Value As Integer)
-    mPaperSizeWidthInPixels = Value
+Public Property Let PaperSizeWidthInPixels(ByVal value As Integer)
+    mPaperSizeWidthInPixels = value
 End Property
 
 '////////////////////////////////////////////////////////////////////////
@@ -181,19 +181,19 @@ End Property
 '////////////////////////////////////////////////////////////////////////
 '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-Public Property Get Recordset() As ADODB.Recordset
-    Set Recordset = mRecordset
+Public Property Get recordset() As ADODB.recordset
+    Set recordset = mRecordset
 End Property
 
-Public Property Set Recordset(ByVal Value As ADODB.Recordset)
-    Set mRecordset = Value.Clone
+Public Property Set recordset(ByVal value As ADODB.recordset)
+    Set mRecordset = value.Clone
 End Property
 
 '////////////////////////////////////////////////////////////////////////
 '\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
-    Dim ErrorMessage As String
+    Dim errorMessage As String
     
     Dim ParameterCurrent As CSC_ReportParameter
     Dim ParameterFieldDefinition As CRAXDRT.ParameterFieldDefinition
@@ -217,11 +217,11 @@ Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
     
     'Start the Application if its the first time
     If pCRAXDRTApplication Is Nothing Then
-        ErrorMessage = "Ha ocurrido un error al inciar una nueva sesión de Crystal Reports."
+        errorMessage = "Ha ocurrido un error al inciar una nueva sesión de Crystal Reports."
         Set pCRAXDRTApplication = New CRAXDRT.Application
     End If
     
-    ErrorMessage = "Error al abrir el Reporte." & vbCr & vbCr & "FileName: " & mFileName
+    errorMessage = "Error al abrir el Reporte." & vbCr & vbCr & "FileName: " & mFileName
     Set mCRAXDRTReport = pCRAXDRTApplication.OpenReport(mFileName, crOpenReportByDefault)
     
     With mCRAXDRTReport
@@ -254,22 +254,22 @@ Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
         
         '//////////////////////////////////////////////////////
         'SET DATABASE INFO
-        If Not Recordset Is Nothing Then
-            ErrorMessage = "Error al asignar el recordset al Reporte."
-            Call .Database.SetDataSource(mRecordset)
+        If Not recordset Is Nothing Then
+            errorMessage = "Error al asignar el recordset al Reporte."
+            Call .database.SetDataSource(mRecordset)
         Else
-            For Each DatabaseTable In Report.Database.Tables
-                ErrorMessage = "Error al asignar la base de datos a la Tabla '" & DatabaseTable.Name & "' del Reporte."
-                DatabaseTable.ConnectionProperties("Provider").Value = pDatabase.Provider
-                DatabaseTable.ConnectionProperties("Data Source").Value = pDatabase.DataSource
+            For Each DatabaseTable In Report.database.Tables
+                errorMessage = "Error al asignar la base de datos a la Tabla '" & DatabaseTable.Name & "' del Reporte."
+                DatabaseTable.ConnectionProperties("Provider").value = pDatabase.Provider
+                DatabaseTable.ConnectionProperties("Data Source").value = pDatabase.DataSource
                 If IsSQLServer Then
-                    DatabaseTable.ConnectionProperties("Initial Catalog").Value = pDatabase.Database
-                    DatabaseTable.ConnectionProperties("Connect Timeout").Value = pDatabase.ConnectionTimeout
-                    DatabaseTable.ConnectionProperties("General Timeout").Value = pDatabase.CommandTimeout
+                    DatabaseTable.ConnectionProperties("Initial Catalog").value = pDatabase.database
+                    DatabaseTable.ConnectionProperties("Connect Timeout").value = pDatabase.ConnectionTimeout
+                    DatabaseTable.ConnectionProperties("General Timeout").value = pDatabase.CommandTimeout
                 End If
-                DatabaseTable.ConnectionProperties("Password").Value = pDatabase.Password
+                DatabaseTable.ConnectionProperties("Password").value = pDatabase.Password
                 If IsSQLServer Then
-                    DatabaseTable.Location = pDatabase.Database & ".dbo." & DatabaseTable.Location
+                    DatabaseTable.Location = pDatabase.database & ".dbo." & DatabaseTable.Location
                 End If
             Next DatabaseTable
         
@@ -277,18 +277,18 @@ Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
                 For Each ReportObject In Section.ReportObjects
                     If ReportObject.Kind = crSubreportObject Then
                         Set SubReportObject = ReportObject
-                        For Each DatabaseTable In SubReportObject.OpenSubreport.Database.Tables
-                            ErrorMessage = "Error al asignar la base de datos a la Tabla '" & DatabaseTable.Name & "' del Sub-Reporte '" & SubReportObject.Name & "'."
+                        For Each DatabaseTable In SubReportObject.OpenSubreport.database.Tables
+                            errorMessage = "Error al asignar la base de datos a la Tabla '" & DatabaseTable.Name & "' del Sub-Reporte '" & SubReportObject.Name & "'."
                             'DatabaseTable.ConnectionProperties("Provider").Value = pParametro.Report_Provider
-                            DatabaseTable.ConnectionProperties("Data Source").Value = pDatabase.DataSource
+                            DatabaseTable.ConnectionProperties("Data Source").value = pDatabase.DataSource
                             If IsSQLServer Then
-                                DatabaseTable.ConnectionProperties("Initial Catalog").Value = pDatabase.Database
-                                DatabaseTable.ConnectionProperties("Connect Timeout").Value = pDatabase.ConnectionTimeout
-                                DatabaseTable.ConnectionProperties("General Timeout").Value = pDatabase.CommandTimeout
+                                DatabaseTable.ConnectionProperties("Initial Catalog").value = pDatabase.database
+                                DatabaseTable.ConnectionProperties("Connect Timeout").value = pDatabase.ConnectionTimeout
+                                DatabaseTable.ConnectionProperties("General Timeout").value = pDatabase.CommandTimeout
                             End If
-                            DatabaseTable.ConnectionProperties("Password").Value = pDatabase.Password
+                            DatabaseTable.ConnectionProperties("Password").value = pDatabase.Password
                             If IsSQLServer Then
-                                DatabaseTable.Location = pDatabase.Database & ".dbo." & DatabaseTable.Location
+                                DatabaseTable.Location = pDatabase.database & ".dbo." & DatabaseTable.Location
                             End If
                         Next DatabaseTable
                     End If
@@ -301,8 +301,8 @@ Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
         For Each ParameterCurrent In mCParameters
             If IsNull(ParameterCurrent.ParameterValue) Or IsEmpty(ParameterCurrent.ParameterValue) Then
             Else
-                ErrorMessage = "Error al definir el Parámetro del Reporte." & vbCr & vbCr & "Parametro: " & ParameterCurrent.ParameterName
-                Set ParameterFieldDefinition = mCRAXDRTReport.ParameterFields.GetItemByName(ParameterCurrent.ParameterName)
+                errorMessage = "Error al definir el Parámetro del Reporte." & vbCr & vbCr & "Parametro: " & ParameterCurrent.ParameterName
+                Set ParameterFieldDefinition = mCRAXDRTReport.ParameterFields.GetItemByName(IIf(Left(ParameterCurrent.ParameterName, 1) = "@", "", "@") & ParameterCurrent.ParameterName)
                 With ParameterFieldDefinition
                     Select Case .ValueType
                         Case crInt8sField, crInt8uField, crInt16sField, crInt16uField, crInt32sField, crInt32uField, crNumberField
@@ -329,7 +329,7 @@ Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
         .ApplicationName = App.Title
         .SetDialogParentWindow ParentForm_hWnd
         If mRecordSelectionFormula <> "" Then
-            .RecordSelectionFormula = mRecordSelectionFormula
+            .recordSelectionFormula = mRecordSelectionFormula
         End If
         If mPrinterSetup Then
             .PrinterSetup ParentForm_hWnd
@@ -342,13 +342,13 @@ Public Function OpenReport(ByVal IsSQLServer As Boolean) As Boolean
     Exit Function
     
 ErrorHandler:
-    ShowErrorMessage "Classes.CSC_Report.OpenReport", ErrorMessage
+    ShowErrorMessage "Classes.CSC_Report.OpenReport", errorMessage
 End Function
 
 Public Function PreviewReport(ByVal promptUser As Boolean) As Boolean
     Dim ReportViewer As CSF_ReportViewer
     Dim FormLoaded As Boolean
-    Dim ErrorMessage As String
+    Dim errorMessage As String
     
     If pTrapErrors Then
         On Error GoTo ErrorHandler
@@ -357,13 +357,13 @@ Public Function PreviewReport(ByVal promptUser As Boolean) As Boolean
     Screen.MousePointer = vbHourglass
     DoEvents
     
-    ErrorMessage = "Error al abrir una nueva sesión del Visor de Reportes."
+    errorMessage = "Error al abrir una nueva sesión del Visor de Reportes."
     Set ReportViewer = New CSF_ReportViewer
     Load ReportViewer
     FormLoaded = True
     With ReportViewer.CRViewer
         .DisplayGroupTree = mDisplayGroupTree
-        ErrorMessage = "Error al abrir el Reporte."
+        errorMessage = "Error al abrir el Reporte."
         .ReportSource = mCRAXDRTReport
         If promptUser Then
             Call mCRAXDRTReport.PrinterSetupEx(mParentForm_hWnd)
@@ -379,7 +379,7 @@ Public Function PreviewReport(ByVal promptUser As Boolean) As Boolean
     Exit Function
     
 ErrorHandler:
-    ShowErrorMessage "Classes.CSC_Report.PreviewReport", ErrorMessage
+    ShowErrorMessage "Classes.CSC_Report.PreviewReport", errorMessage
     If FormLoaded Then
         Unload ReportViewer
         Set ReportViewer = Nothing
